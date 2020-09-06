@@ -18,7 +18,7 @@ double source_term(double x){
 }
 
 void problemB(int n, string filename){
-  
+
 
 
 // Diagonal vectors 
@@ -95,7 +95,13 @@ void problemB(int n, string filename){
 }
 
 void problemc(int n, string filename){
-    
+    /* The specific algorithm is very similar
+    * so most code is copied from problemB
+    * what should have been done is to
+    * have created templates or use inheretance
+    * but poor planning and inexperience 
+    * made that difficult.
+    */ 
     
 // Diagonal vectors 
     double *a_vector = new double[n + 1];
