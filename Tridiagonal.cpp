@@ -48,17 +48,17 @@ void problemB(int n, string filename){
 // Initializing the vectors
     for (int i = 0; i <n+1; i++){
         x[i] = i*h;
-        cout << x[i];
         a_vector[i] = c_vector[i] = -1 ;
         b_vector[i] = 2;
     }
     
     for (int i = 0; i < n+1; i++){
-        f_tilde[i] = hh*source_term(x[i]);
+        f[i] = hh*source_term(x[i]);
         u[i] = closed_solution(x[i]);
     }
 
 // General algorithm: Forward substitution
+    f_tilde[0] = f[0];
     for (int i = 1; i < n+1; i++){
         b_vector[i] = b_vector[i] - a_vector[i] * c_vector[i-1]/b_vector[i-1];
         f_tilde[i] = f[i] - a_vector[i] * f_tilde[i-1]/b_vector[i-1];
@@ -74,10 +74,11 @@ void problemB(int n, string filename){
 //File writing
     ofile.open(filename);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
-    ofile << "b_vector      x" << endl;
-    for (int i = 1; i < n+1; i++){
-        ofile << setw(15) << setprecision(8) << b_vector[i];
-        ofile << setw(15) << setprecision(8) << x[i] << endl;
+    ofile << "     x        v       u" << endl;
+    for (int i = 1; i < n+1; i++){        
+        ofile << setw(15) << setprecision(8) << x[i];
+        ofile << setw(15) << setprecision(8) << v[i];
+        ofile << setw(15) << setprecision(8) << u[i] << endl;
     }
 
     ofile.close();
@@ -88,16 +89,93 @@ void problemB(int n, string filename){
     delete [] v;
     delete [] f_tilde;
     delete [] f;
-    delete [] U;
+    delete [] u;
     delete [] x;
 
+}
+
+void problemc(int n, string filename){
+    
+    
+// Diagonal vectors 
+    double *a_vector = new double[n + 1];
+    double *b_vector = new double[n + 1];
+    double *c_vector = new double[n + 1];
+
+// Numeric solution
+    double *v = new double[n + 1];
+
+// Solution matrix RHS
+    double *f_tilde = new double[n + 1];
+    double *f = new double[n + 1];
+
+// Analytical solution
+    double *u = new double[n + 1];
+
+
+
+// Step size
+    double h = 1.0 / (n);
+    double hh = h*h;
+
+// Steps
+    double *x = new double[n+1];
+
+// Initializing the vectors
+    for (int i = 0; i <n+1; i++){
+        x[i] = i*h;
+        a_vector[i] = c_vector[i] = -1 ;
+        b_vector[i] = 2;
+    }
+    
+    for (int i = 0; i < n+1; i++){
+        f[i] = hh*source_term(x[i]);
+        u[i] = closed_solution(x[i]);
+    }
+
+// General algorithm: Forward substitution
+    f_tilde[0] = f[0];
+    for (int i = 1; i < n+1; i++){
+        b_vector[i] = b_vector[i] - a_vector[i] * c_vector[i-1]/b_vector[i-1];
+        f_tilde[i] = f[i] - a_vector[i] * f_tilde[i-1]/b_vector[i-1];
+    }
+
+// Backward substitution
+    v[n] = f_tilde[n]/b_vector[n];
+    for (int i = n-1; i >= 1; i--){
+        v[i] =(f_tilde[i] - c_vector[i]*v[i+1]) /b_vector[i];
+    }
+
+
+//File writing
+    ofile.open(filename);
+    ofile << setiosflags(ios::showpoint | ios::uppercase);
+    ofile << "     x        v       u" << endl;
+    for (int i = 1; i < n+1; i++){        
+        ofile << setw(15) << setprecision(8) << x[i];
+        ofile << setw(15) << setprecision(8) << v[i];
+        ofile << setw(15) << setprecision(8) << u[i] << endl;
+    }
+
+    ofile.close();
+
+    delete [] a_vector;
+    delete [] b_vector;
+    delete [] c_vector;
+    delete [] v;
+    delete [] f_tilde;
+    delete [] f;
+    delete [] u;
+    delete [] x;
 }
 
 
 
 
 int main(){
-    problemB(100, "test.txt");
+    problemB(10, "big.txt");
+    problemB(100, "bigger.txt");
+    problemB(1000, "biggest.txt");
 
    return 0;
 }

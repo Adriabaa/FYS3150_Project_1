@@ -2,12 +2,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-data = np.loadtxt("test.txt", skiprows = 1)
+def plot(filename):
+    data = np.loadtxt(filename, skiprows = 1)
 
-n = data.size
+    x = data[:,0]
+    numeric = data[:,1]
+    exact = data[:,2]
 
-y = np.zeros(n)
-x = np.zeros(n)
+    n = x.size
 
-plt.plot(data)
-plt.show()
+    plt.xlabel(r"$x$")
+    plt.xlabel(r"$x$")
+    plt.title("n =" + str(n))
+    plt.plot(x, numeric, label ="Numeric")
+    plt.plot(x, exact, label = "Exact")
+    plt.legend()
+    plt.show()
+
+plot("big.txt")
+plot("bigger.txt")
+plot("biggest.txt")
+
