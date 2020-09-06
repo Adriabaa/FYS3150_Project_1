@@ -2,6 +2,8 @@
 #include <cmath>
 #include <fstream>
 #include <iomanip>
+#include <time.h>
+
 
 using namespace std;
 
@@ -57,6 +59,10 @@ void problemB(int n, string filename){
         u[i] = closed_solution(x[i]);
     }
 
+//Time start
+    clock_t start, finish;
+    start = clock();
+
 // General algorithm: Forward substitution
     f_tilde[0] = f[0];
     for (int i = 1; i < n+1; i++){
@@ -69,7 +75,10 @@ void problemB(int n, string filename){
     for (int i = n-1; i >= 1; i--){
         v[i] =(f_tilde[i] - c_vector[i]*v[i+1]) /b_vector[i];
     }
-
+//Time end
+    finish = clock();
+    double timeused = (finish - start)/((double) CLOCKS_PER_SEC);
+    cout << "Time used for computation=" << timeused << endl;
 
 //File writing
     ofile.open(filename);
@@ -94,19 +103,17 @@ void problemB(int n, string filename){
 
 }
 
-void problemc(int n, string filename){
+void problemC(int n, string filename){
     /* The specific algorithm is very similar
-    * so most code is copied from problemB
-    * what should have been done is to
-    * have created templates or use inheretance
-    * but poor planning and inexperience 
-    * made that difficult.
+     so most code is copied from problemB
+     what should have been done is to
+     have created templates or use inheretance
+     but poor planning and inexperience 
+     made that difficult.
     */ 
     
-// Diagonal vectors 
-    double *a_vector = new double[n + 1];
+// Diagonal vector (c and a are constant at 1)
     double *b_vector = new double[n + 1];
-    double *c_vector = new double[n + 1];
 
 // Numeric solution
     double *v = new double[n + 1];
@@ -118,8 +125,6 @@ void problemc(int n, string filename){
 // Analytical solution
     double *u = new double[n + 1];
 
-
-
 // Step size
     double h = 1.0 / (n);
     double hh = h*h;
@@ -130,7 +135,6 @@ void problemc(int n, string filename){
 // Initializing the vectors
     for (int i = 0; i <n+1; i++){
         x[i] = i*h;
-        a_vector[i] = c_vector[i] = -1 ;
         b_vector[i] = 2;
     }
     
@@ -139,18 +143,28 @@ void problemc(int n, string filename){
         u[i] = closed_solution(x[i]);
     }
 
+//Time start
+    clock_t start, finish;
+    start = clock();    
+
 // General algorithm: Forward substitution
     f_tilde[0] = f[0];
     for (int i = 1; i < n+1; i++){
-        b_vector[i] = b_vector[i] - a_vector[i] * c_vector[i-1]/b_vector[i-1];
-        f_tilde[i] = f[i] - a_vector[i] * f_tilde[i-1]/b_vector[i-1];
+        b_vector[i] -= 1/b_vector[i-1];
+        f_tilde[i] = f[i] - f_tilde[i-1]/b_vector[i-1];
     }
 
 // Backward substitution
     v[n] = f_tilde[n]/b_vector[n];
     for (int i = n-1; i >= 1; i--){
-        v[i] =(f_tilde[i] - c_vector[i]*v[i+1]) /b_vector[i];
+        v[i] =(f_tilde[i] - v[i+1]) /b_vector[i];
     }
+
+    finish = clock();
+    double timeused = (finish - start)/((double) CLOCKS_PER_SEC);
+    cout << "Time used for computation=" << timeused << endl;
+
+//Solving for the relativ error
 
 
 //File writing
@@ -165,9 +179,7 @@ void problemc(int n, string filename){
 
     ofile.close();
 
-    delete [] a_vector;
     delete [] b_vector;
-    delete [] c_vector;
     delete [] v;
     delete [] f_tilde;
     delete [] f;
