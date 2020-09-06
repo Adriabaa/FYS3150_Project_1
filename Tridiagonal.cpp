@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -29,35 +30,66 @@ void problemB(int n, string filename){
     double *v = new double[n + 1];
 
 // Solution matrix RHS
-    double *b_tilde = new double[n + 1];
+    double *f_tilde = new double[n + 1];
+    double *f = new double[n + 1];
 
 // Analytical solution
     double *u = new double[n + 1];
 
+
+
 // Step size
-    double h = 1.0 / (n + 1.0);
+    double h = 1.0 / (n);
+    double hh = h*h;
 
 // Steps
     double *x = new double[n+1];
 
-
-    for (int i = 0; i < n+1; i++){
-        b_tilde[i] = h*h*source_term(x[i]);
-        u[i] = closed_solution(x[i]);
-    }
-
 // Initializing the vectors
     for (int i = 0; i <n+1; i++){
         x[i] = i*h;
+        cout << x[i];
         a_vector[i] = c_vector[i] = -1 ;
         b_vector[i] = 2;
     }
-
-// General algorithm
-    for (int i = 1; i <n+1; i++){
-        b_vector[i] = b_vector[i] - a_vector[i] * c_vector[i-1]/b_vector[i-1];
+    
+    for (int i = 0; i < n+1; i++){
+        f_tilde[i] = hh*source_term(x[i]);
+        u[i] = closed_solution(x[i]);
     }
-    cout << b_vector[7];
+
+// General algorithm: Forward substitution
+    for (int i = 1; i < n+1; i++){
+        b_vector[i] = b_vector[i] - a_vector[i] * c_vector[i-1]/b_vector[i-1];
+        f_tilde[i] = f[i] - a_vector[i] * f_tilde[i-1]/b_vector[i-1];
+    }
+
+// Backward substitution
+    v[n] = f_tilde[n]/b_vector[n];
+    for (int i = n-1; i >= 1; i--){
+        v[i] =(f_tilde[i] - c_vector[i]*v[i+1]) /b_vector[i];
+    }
+
+
+//File writing
+    ofile.open(filename);
+    ofile << setiosflags(ios::showpoint | ios::uppercase);
+    ofile << "b_vector      x" << endl;
+    for (int i = 1; i < n+1; i++){
+        ofile << setw(15) << setprecision(8) << b_vector[i];
+        ofile << setw(15) << setprecision(8) << x[i] << endl;
+    }
+
+    ofile.close();
+
+    delete [] a_vector;
+    delete [] b_vector;
+    delete [] c_vector;
+    delete [] v;
+    delete [] f_tilde;
+    delete [] f;
+    delete [] U;
+    delete [] x;
 
 }
 
@@ -65,7 +97,7 @@ void problemB(int n, string filename){
 
 
 int main(){
-    problemB(2, "test.txt");
+    problemB(100, "test.txt");
 
    return 0;
 }
