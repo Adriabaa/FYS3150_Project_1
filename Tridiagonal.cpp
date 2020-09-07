@@ -138,9 +138,6 @@ void problemC(int n, string filename){
     for (int i = 0; i <n+1; i++){
         x[i] = i*h;
         b_vector[i] = 2;
-    }
-    
-    for (int i = 0; i < n+1; i++){
         f[i] = hh*source_term(x[i]);
         v[i] = closed_solution(x[i]);
     }
@@ -153,13 +150,13 @@ void problemC(int n, string filename){
     f_tilde[0] = f[0];
     for (int i = 1; i < n+1; i++){
         b_vector[i] -= 1/b_vector[i-1];
-        f_tilde[i] = f[i] - f_tilde[i-1]/b_vector[i-1];
+        f_tilde[i] = f[i] + f_tilde[i-1]/b_vector[i-1];
     }
 
 // Backward substitution
     u[n] = f_tilde[n]/b_vector[n];
     for (int i = n-1; i >= 1; i--){
-        u[i] =(f_tilde[i] - u[i+1]) /b_vector[i];
+        u[i] =(f_tilde[i] + u[i+1]) /b_vector[i];
     }
 
     finish = clock();
@@ -181,6 +178,8 @@ void problemC(int n, string filename){
     }
 
     cout << "Max value of relative error " << max << endl;
+
+
 
 //File writing
     ofile.open(filename);
