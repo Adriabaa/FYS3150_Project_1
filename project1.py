@@ -22,7 +22,7 @@ def plot(filename):
     plt.savefig(str(n) + ".png")
     plt.close()
 
-plot("Cn1.txt")
-plot("Cn2.txt")
-plot("Cn3.txt")
+plot("Bn1.txt")
+plot("Bn2.txt")
+plot("Bn3.txt")
 

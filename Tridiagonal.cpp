@@ -40,8 +40,6 @@ void problemB(int n, string filename){
 // Analytical solution
     double *v = new double[n + 1];
 
-
-
 // Step size
     double h = 1.0 / (n);
     double hh = h*h;
@@ -66,9 +64,10 @@ void problemB(int n, string filename){
     start = clock();
 
 // General algorithm: Forward substitution
-    f_tilde[0] = f[0];
-    for (int i = 1; i < n+1; i++){
-        b_vector[i] = b_vector[i] - a_vector[i] * c_vector[i-1]/b_vector[i-1];
+    f_tilde[n] = 0;
+    f_tilde[0] = 0;
+    for (int i = 1; i < n; i++){
+        b_vector[i] = b_vector[i] - a_vector[i-1] * c_vector[i-1]/b_vector[i-1];
         f_tilde[i] = f[i] - a_vector[i] * f_tilde[i-1]/b_vector[i-1];
     }
 
@@ -147,9 +146,10 @@ void problemC(int n, string filename){
     start = clock();    
 
 // General algorithm: Forward substitution
-    f_tilde[0] = f[0];
-    for (int i = 1; i < n+1; i++){
-        b_vector[i] -= 1/b_vector[i-1];
+    f_tilde[0] = 0;
+    f_tilde[n] = 0;
+    for (int i = 1; i < n; i++){
+        b_vector[i] = (1.0 + i)/i;
         f_tilde[i] = f[i] + f_tilde[i-1]/b_vector[i-1];
     }
 
@@ -171,7 +171,7 @@ void problemC(int n, string filename){
         error[i] = log10(abs((v[i]-u[i])/u[i]));
     }
     double max = error[0];
-    for (int i = 0; i < n; i++){
+    for (int i = 0; i < n+1; i++){
         if(abs(error[i]) > abs(max)){
             max = error[i];
         }
