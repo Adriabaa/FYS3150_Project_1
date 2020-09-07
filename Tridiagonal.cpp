@@ -257,12 +257,12 @@ int main(){
 
 
     cout << "Problem C:" << endl;
-    problemC(10, "n1.txt");
-    problemC(100, "n2.txt");
-    problemC(1000, "n3.txt");
-    problemC(10000, "n4.txt");
-    problemC(100000, "n5.txt");
-    problemC(100000, "n6.txt");
+    problemC(10, "Cn1.txt");
+    problemC(100, "Cn2.txt");
+    problemC(1000, "Cn3.txt");
+    problemC(10000, "Cn4.txt");
+    problemC(100000, "Cn5.txt");
+    problemC(100000, "Cn6.txt");
     cout << "problem E:" << endl;
     problemE(100);
    return 0;
