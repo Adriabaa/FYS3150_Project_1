@@ -167,7 +167,7 @@ void problemC(int n, string filename){
     double error[n+1];
     
 
-    for (int i = 0; i < n; i++){
+    for (int i = 1; i < n; i++){
         error[i] = log10(abs((v[i]-u[i])/u[i]));
     }
     double max = error[0];
