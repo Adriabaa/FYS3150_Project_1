@@ -3,9 +3,11 @@
 #include <fstream>
 #include <iomanip>
 #include <time.h>
+#include <armadillo>
 
 
 using namespace std;
+using namespace arma;
 
 //Writing to file
 ofstream ofile;
@@ -178,7 +180,7 @@ void problemC(int n, string filename){
         }
     }
 
-    cout << max << endl;
+    cout << "Max value of relative error " << max << endl;
 
 //File writing
     ofile.open(filename);
@@ -200,22 +202,69 @@ void problemC(int n, string filename){
     delete [] x;
 }
 
+void problemE(int n){
+
+// Diagonal vectors
+    vec a(n+1);
+    vec b(n+1);
+    vec c(n+1);
+    vec x(n+1);
+    vec f(n+1);
+
+    
+
+    double h = 1.0 / (n);
+    double hh = h*h;
+
+ 
+
+// Matrix
+    mat A = zeros<mat>(n+1,n+1);
+
+
+    // Initializing matrix
+    for(int i = 0; i <= n; i++){
+        for(int j = 0; j <= n; j++){
+            if (i = j){
+                A(i,j) = b(i);
+            } else if(i = j - 1){
+                A(i, j) = a(i);
+            } else if(i = j + 1){
+                A(i, j) = c(i);
+            }
+        }
+    }
+
+    for (int i=0; i < n+1; i++){
+        x(i)= i*h;
+        f(i)= hh*source_term(x(i));
+    }
+
+
+}
+
 
 
 
 int main(){
     cout << "Problem B:" << endl;
-    problemB(10, "big.txt");
-    problemB(100, "bigger.txt");
-    problemB(1000, "biggest.txt");
+    problemB(10, "Bn1.txt");
+    problemB(100, "Bn2.txt");
+    problemB(1000, "Bn3.txt");
+    problemB(10000, "Bn4.txt");
+    problemB(100000, "Bn5.txt");
+    problemB(1000000, "Bn6.txt");
 
 
     cout << "Problem C:" << endl;
-    problemC(100, "n1.txt");
-    problemC(1000, "n1.txt");
-    problemC(10000, "n1.txt");
-
-
+    problemC(10, "n1.txt");
+    problemC(100, "n2.txt");
+    problemC(1000, "n3.txt");
+    problemC(10000, "n4.txt");
+    problemC(100000, "n5.txt");
+    problemC(100000, "n6.txt");
+    cout << "problem E:" << endl;
+    problemE(100);
    return 0;
 }
 

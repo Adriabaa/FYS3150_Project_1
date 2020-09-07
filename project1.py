@@ -11,15 +11,18 @@ def plot(filename):
 
     n = x.size
 
+    
+
     plt.xlabel(r"$x$")
     plt.xlabel(r"$x$")
     plt.title("n =" + str(n))
     plt.plot(x, numeric, label ="Numeric")
     plt.plot(x, exact, label = "Exact")
     plt.legend()
-    plt.show()
+    plt.savefig(str(n) + ".png")
+    plt.close()
 
-plot("big.txt")
-plot("bigger.txt")
-plot("biggest.txt")
+plot("Bn1.txt")
+plot("Bn2.txt")
+plot("Bn3.txt")
 
