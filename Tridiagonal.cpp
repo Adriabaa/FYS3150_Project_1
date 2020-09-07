@@ -29,14 +29,14 @@ void problemB(int n, string filename){
     double *c_vector = new double[n + 1];
 
 // Numeric solution
-    double *v = new double[n + 1];
+    double *u = new double[n + 1];
 
 // Solution matrix RHS
     double *f_tilde = new double[n + 1];
     double *f = new double[n + 1];
 
 // Analytical solution
-    double *u = new double[n + 1];
+    double *v = new double[n + 1];
 
 
 
@@ -56,7 +56,7 @@ void problemB(int n, string filename){
     
     for (int i = 0; i < n+1; i++){
         f[i] = hh*source_term(x[i]);
-        u[i] = closed_solution(x[i]);
+        v[i] = closed_solution(x[i]);
     }
 
 //Time start
@@ -71,9 +71,9 @@ void problemB(int n, string filename){
     }
 
 // Backward substitution
-    v[n] = f_tilde[n]/b_vector[n];
+    u[n] = f_tilde[n]/b_vector[n];
     for (int i = n-1; i >= 1; i--){
-        v[i] =(f_tilde[i] - c_vector[i]*v[i+1]) /b_vector[i];
+        u[i] =(f_tilde[i] - c_vector[i]*u[i+1]) /b_vector[i];
     }
 //Time end
     finish = clock();
@@ -83,11 +83,11 @@ void problemB(int n, string filename){
 //File writing
     ofile.open(filename);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
-    ofile << "     x        v       u" << endl;
+    ofile << "     x        u       v" << endl;
     for (int i = 1; i < n+1; i++){        
         ofile << setw(15) << setprecision(8) << x[i];
-        ofile << setw(15) << setprecision(8) << v[i];
-        ofile << setw(15) << setprecision(8) << u[i] << endl;
+        ofile << setw(15) << setprecision(8) << u[i];
+        ofile << setw(15) << setprecision(8) << v[i] << endl;
     }
 
     ofile.close();
@@ -116,14 +116,14 @@ void problemC(int n, string filename){
     double *b_vector = new double[n + 1];
 
 // Numeric solution
-    double *v = new double[n + 1];
+    double *u = new double[n + 1];
 
 // Solution matrix RHS
     double *f_tilde = new double[n + 1];
     double *f = new double[n + 1];
 
 // Analytical solution
-    double *u = new double[n + 1];
+    double *v = new double[n + 1];
 
 // Step size
     double h = 1.0 / (n);
@@ -140,7 +140,7 @@ void problemC(int n, string filename){
     
     for (int i = 0; i < n+1; i++){
         f[i] = hh*source_term(x[i]);
-        u[i] = closed_solution(x[i]);
+        v[i] = closed_solution(x[i]);
     }
 
 //Time start
@@ -155,9 +155,9 @@ void problemC(int n, string filename){
     }
 
 // Backward substitution
-    v[n] = f_tilde[n]/b_vector[n];
+    u[n] = f_tilde[n]/b_vector[n];
     for (int i = n-1; i >= 1; i--){
-        v[i] =(f_tilde[i] - v[i+1]) /b_vector[i];
+        u[i] =(f_tilde[i] - u[i+1]) /b_vector[i];
     }
 
     finish = clock();
@@ -165,16 +165,29 @@ void problemC(int n, string filename){
     cout << "Time used for computation=" << timeused << endl;
 
 //Solving for the relativ error
+    double error[n+1];
+    
 
+    for (int i = 0; i < n; i++){
+        error[i] = log10(abs((v[i]-u[i])/u[i]));
+    }
+    double max = error[0];
+    for (int i = 0; i < n; i++){
+        if(abs(error[i]) > abs(max)){
+            max = error[i];
+        }
+    }
+
+    cout << max << endl;
 
 //File writing
     ofile.open(filename);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
-    ofile << "     x        v       u" << endl;
+    ofile << "     x        u       v" << endl;
     for (int i = 1; i < n+1; i++){        
         ofile << setw(15) << setprecision(8) << x[i];
-        ofile << setw(15) << setprecision(8) << v[i];
-        ofile << setw(15) << setprecision(8) << u[i] << endl;
+        ofile << setw(15) << setprecision(8) << u[i];
+        ofile << setw(15) << setprecision(8) << v[i] << endl;
     }
 
     ofile.close();
@@ -191,9 +204,17 @@ void problemC(int n, string filename){
 
 
 int main(){
+    cout << "Problem B:" << endl;
     problemB(10, "big.txt");
     problemB(100, "bigger.txt");
     problemB(1000, "biggest.txt");
+
+
+    cout << "Problem C:" << endl;
+    problemC(100, "n1.txt");
+    problemC(1000, "n1.txt");
+    problemC(10000, "n1.txt");
+
 
    return 0;
 }
