@@ -127,7 +127,7 @@ void problemC(int n, string filename){
     double *v = new double[n + 1];
 
 // Step size
-    double h = 1.0 / (n);
+    double h = 1.0 / (n );
     double hh = h*h;
 
 // Steps
@@ -184,6 +184,7 @@ void problemC(int n, string filename){
 //File writing
     ofile.open(filename);
     ofile << setiosflags(ios::showpoint | ios::uppercase);
+    ofile << max << endl;
     ofile << "     x        u       v" << endl;
     for (int i = 1; i < n+1; i++){        
         ofile << setw(15) << setprecision(8) << x[i];
@@ -212,34 +213,44 @@ void problemE(int n){
 
     
 
-    double h = 1.0 / (n);
+    double h = 1.0 / (n + 1);
     double hh = h*h;
 
- 
+
 
 // Matrix
-    mat A = zeros<mat>(n+1,n+1);
+    mat A = zeros<mat>(n + 1, n + 1);
 
 
     // Initializing matrix
-    for(int i = 0; i <= n; i++){
-        for(int j = 0; j <= n; j++){
-            if (i = j){
-                A(i,j) = b(i);
-            } else if(i = j - 1){
-                A(i, j) = a(i);
-            } else if(i = j + 1){
-                A(i, j) = c(i);
+    for(int i = 0; i < n + 1; i++){
+        for(int j = 0; j < n + 1; j++){
+            if (i == j){
+                A(i,j) = 2;
+            } else if(i == j - 1){
+                A(i, j) = -1;
+            } else if(i == j + 1){
+                A(i, j) = -1;
             }
         }
     }
 
-    for (int i=0; i < n+1; i++){
+    for (int i=0; i < n + 1; i++){
         x(i)= i*h;
         f(i)= hh*source_term(x(i));
     }
 
+    // Solve Av = f
+    
+    clock_t start, finish;
+    start = clock();
+    
+    vec v = solve(A,f);
 
+
+    finish = clock();
+    double timeused = (finish - start)/((double) CLOCKS_PER_SEC);
+    cout << "Time used for computation=" << timeused << endl;
 }
 
 
@@ -262,8 +273,15 @@ int main(){
     problemC(10000, "Cn4.txt");
     problemC(100000, "Cn5.txt");
     problemC(100000, "Cn6.txt");
+    problemC(1000000, "Cn7.txt");
+
+
     cout << "problem E:" << endl;
+    problemE(10);
     problemE(100);
+    problemE(1000);
+    problemE(10000);
+    problemE(100000);
    return 0;
 }
 
