@@ -42,7 +42,7 @@ plt.xlabel(r"$log_{10}(h)$")
 plt.title("Max relative error ")
 plt.plot(x, data, "ro")
 plt.legend()
-plt.show()
+#plt.show()
 plt.savefig("ERROR.png")
 
 #plot("Cn1.txt")
