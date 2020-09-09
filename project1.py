@@ -2,10 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def error():
+    data = []
+    x = []
+
     for i in range(1, 8):
         d = open("Cn" + str(i) + ".txt")
         line = d.readline()
-        print(line)
+        data.append(float(line))
+        h = -i
+        x.append(h)
+    return data, x
 
 def plot(filename):
     data = np.loadtxt(filename, skiprows = 2)
@@ -27,7 +33,17 @@ def plot(filename):
     plt.savefig(str(n) + ".png")
     plt.close()
 
-error()
+data, x = error()
+
+print(data, x)
+
+plt.xlabel(r"$log_{10}(h)$")
+#plt.ylabel(r"$x$")
+plt.title("Max relative error ")
+plt.plot(x, data, "ro")
+plt.legend()
+plt.show()
+plt.savefig("ERROR.png")
 
 #plot("Cn1.txt")
 #plot("Cn2.txt")

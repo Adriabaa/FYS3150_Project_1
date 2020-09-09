@@ -273,7 +273,7 @@ int main(){
     problemC(10000, "Cn4.txt");
     problemC(100000, "Cn5.txt");
     problemC(100000, "Cn6.txt");
-    problemC(1000000, "Cn7.txt");
+
 
 
     cout << "problem E:" << endl;
